@@ -259,15 +259,32 @@ void display()
     pdx = cos(pa) * 5;
     pdy = - sin(pa) * 5;
 
+    // Variables for collision checking
+    int colOffset = 10;
+    int xo = 0;
+    if (pdx < 0) {xo = -colOffset;} else {xo = colOffset;}
+
+    int yo = 0;
+    if (pdy < 0) {yo = -colOffset;} else {yo = colOffset;}
+
+    int mpx = px / 64;
+    int mpx_add_xo = (px + xo) / 64;
+    int mpx_sub_xo = (px - xo) / 64;
+
+    int mpy = py / 64;
+    int mpy_add_yo = (py + yo) / 64;
+    int mpy_sub_yo = (py - yo) / 64;
+
     if (keys.z)
     {
-        px += pdx * fps * pSpeed; 
-        py += pdy * fps * pSpeed;
+        // Check collision
+        if (map[mpy * mapX + mpx_add_xo] == 0) px += pdx * fps * pSpeed;
+        if (map[mpy_add_yo * mapX + mpx] == 0) py += pdy * fps * pSpeed;
     }
     if (keys.s)
     {
-        px -= pdx * fps * pSpeed; 
-        py -= pdy * fps * pSpeed;
+        if (map[mpy * mapX + mpx_sub_xo] == 0) px -= pdx * fps * pSpeed;
+        if (map[mpy_sub_yo * mapX + mpx] == 0) py -= pdy * fps * pSpeed;
     }
     glutPostRedisplay();
 
