@@ -425,7 +425,28 @@ void drawRays3D()
         for (y = 0; y < lineH; y++)
         {
             float c = textures[(int) ty * 32 + (int) tx] * shade;
-            glColor3f(c, c, c);
+            // Change color depending on texture
+            switch(hmt)
+            {
+                case 0:
+                    // Checkerboard = red
+                    glColor3f(c, c / 2.0, c / 2.0);
+                    break;
+                case 1:
+                    // Brick = yellow
+                    glColor3f(c, c, c / 2.0);
+                    break;
+                case 2:
+                    // Window = blue
+                    glColor3f(c / 2.0, c / 2.0, c);
+                    break;
+                case 3:
+                    // Door = green
+                    glColor3f(c / 2.0, c, c / 2.0);
+                    break;
+                default:
+                    break;
+            }
             glPointSize(8);
             glBegin(GL_POINTS);
             glVertex2i((nbRays - r) * (1024 - drawOffset - 10) / 90 + drawOffset, lineO + y);
