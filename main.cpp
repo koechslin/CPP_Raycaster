@@ -230,6 +230,23 @@ void buttonDown(unsigned char key, int x, int y)
     if (key == 'q') keys.q = 1;
     if (key == 's') keys.s = 1;
     if (key == 'd') keys.d = 1;
+    if (key == 'e')
+    {
+        // Open door
+        int xo = 0;
+        if (pdx < 0) {xo = -25;} else {xo = 25;}
+
+        int yo = 0;
+        if (pdy < 0) {yo = -25;} else {yo = 25;}
+
+        int mpx = px / 64;
+        int mpx_add_xo = (px + xo) / 64;
+
+        int mpy = py / 64;
+        int mpy_add_yo = (py + yo) / 64;
+
+        if (mapWalls[mpy_add_yo * mapX + mpx_add_xo] == 4) mapWalls[mpy_add_yo * mapX + mpx_add_xo] = 0;
+    }
     glutPostRedisplay();
 }
 
