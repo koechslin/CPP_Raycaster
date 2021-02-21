@@ -30,6 +30,30 @@ int mapWalls[] = // Walls
     2, 2, 2, 2, 2, 2, 2, 2,
 };
 
+int mapFloors[] = // Floors
+{
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 2, 2, 1, 1, 1,
+    1, 1, 1, 2, 2, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+};
+
+int mapCeilings[] = // Ceilings
+{
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+};
+
 int textures[] = // 32 x 32 textures
 {
  //Checkerboard
@@ -452,6 +476,40 @@ void drawRays3D()
             glVertex2i((nbRays - r) * (1024 - drawOffset - 10) / 90 + drawOffset, lineO + y);
             glEnd();
             ty += ty_step;
+        }
+
+        // Draw 3D floor
+        for (y = lineO + lineH ; y < 500 ; y++)
+        {
+            float dist = 500.0 / (2.0 * y - 500.0);
+            float ang = pa - ra;
+            if (ang < 0) ang += 2*PI;
+            if (ang > 2*PI) ang -= 2*PI;
+
+            dist = dist / cos(ang);
+
+            tx = px / 2.0 + dist * cos(ra) * 32;
+            ty = py / 2.0 - dist * sin(ra) * 32;
+
+            int mp = mapFloors[(int) (ty / 32.0) * mapX + (int) (tx / 32.0)] * 32 * 32;
+            float c = textures[((int) ty & 31) * 32 + ((int) tx & 31) + mp] * 0.7;
+
+            glPointSize(8);
+            glBegin(GL_POINTS);
+            glColor3f(c / 3, c, c / 3);
+            glVertex2i((nbRays - r) * (1024 - drawOffset - 10) / 90 + drawOffset, y);
+            glEnd();
+
+            // Draw 3D ceiling
+
+            mp = mapCeilings[(int) (ty / 32) * mapX + (int) tx / 32] * 32 * 32;
+            c = textures[((int) ty & 31) * 32 + ((int) tx & 31) + mp] * 0.7;
+
+            glPointSize(8);
+            glBegin(GL_POINTS);
+            glColor3f(c / 3, c / 3, c);
+            glVertex2i((nbRays - r) * (1024 - drawOffset - 10) / 90 + drawOffset, 500 - y);
+            glEnd();
         }
 
         // Next ray angle
